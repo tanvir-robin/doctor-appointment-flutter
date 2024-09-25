@@ -1,7 +1,7 @@
 # Doctor Consultant App UI - V3  - Flutter UI with Functions using Firebase
 
 ## [Watch it on YouTube](https://youtu.be/Lq5M1nmqcLU)
-## [## Extended Work on prebuilt UI
+## Extended Work on prebuilt UI
 
 **Packages we are using:**
 
