@@ -20,7 +20,14 @@ class SplashScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Spacer(),
-                  SvgPicture.asset("assets/icons/gerda_logo.svg"),
+                  // SvgPicture.asset("assets/icons/gerda_logo.svg"),
+                  Text(
+                    'E-HealthCare',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 28,
+                        color: Colors.white),
+                  ),
                   Spacer(),
                   ElevatedButton(
                     onPressed: () => Navigator.pushReplacement(

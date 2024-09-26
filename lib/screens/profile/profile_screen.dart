@@ -1,5 +1,7 @@
 import 'package:doctor/constants.dart';
 import 'package:doctor/screens/settings/settings_screen.dart';
+import 'package:doctor/screens/splash/splash_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -65,6 +67,20 @@ class ProfileScreen extends StatelessWidget {
                     child: TextFormField(
                       initialValue: "Rampura, Banasree",
                       decoration: inputDecoration.copyWith(hintText: "Address"),
+                    ),
+                  ),
+                  Center(
+                    child: ElevatedButton(
+                      child: Text('Sign Out'),
+                      onPressed: () {
+                        FirebaseAuth.instance.signOut();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SplashScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
