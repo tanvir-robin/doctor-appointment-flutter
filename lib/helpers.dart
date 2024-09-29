@@ -1,53 +1,53 @@
-import 'dart:convert'; // For JSON encoding
-import 'package:http/http.dart' as http;
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class EmailService {
-  // Define the URL and Bearer token
-  final String _url = "https://api.mailersend.com/v1/email";
-  final String _apiKey =
-      "mlsn.91f086b3eb5bdd4c9b7830f82a865a9062b7631b39fbcb78f5cca10e5fa7c482";
+  Future<void> sendOtpEmail(String receiverEmail, String otp) async {
+    // Define the SMTP server settings
+    String username = 'tanvirrobin0@gmail.com';
+    String password = 'fkvawdrjzgnklheb';
 
-  // Function to send the OTP email
-  Future<void> sendOtpEmail(String recipientEmail, String otp) async {
-    // Create the POST request body
-    final Map<String, dynamic> body = {
-      "from": {"email": "contact@trial-pq3enl6m72rg2vwr.mlsender.net"},
-      "to": [
-        {"email": recipientEmail}
-      ],
-      "personalization": [
-        {
-          "email": recipientEmail,
-          "data": {"otp": otp, "support_email": "support@algorixit.com"}
-        }
-      ],
-      "subject": "Your OTP Code",
-      "template_id": "pr9084z3qkmlw63d"
-    };
+    final smtpServer = SmtpServer(
+      'smtp.gmail.com',
+      port: 465,
+      ssl: true,
+      username: username,
+      password: password,
+    );
+
+    // Create the email content
+    final message = Message()
+      ..from = Address(username, 'Dental Care')
+      ..recipients.add(receiverEmail)
+      ..subject = 'Your OTP Code'
+      ..html = '''
+    <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+      <div style="margin:50px auto;width:70%;padding:20px 0">
+        <div style="border-bottom:1px solid #eee">
+          <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Dental Care</a>
+        </div>
+        <p style="font-size:1.1em">Hi,</p>
+        <p>Thank you for choosing Dental Care. Use the following OTP to complete your Sign Up procedures. OTP is valid for 5 minutes</p>
+        <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">$otp</h2>
+        <p style="font-size:0.9em;">Regards,<br />Dental Care</p>
+        <hr style="border:none;border-top:1px solid #eee" />
+        <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+          <p>Dental Care</p>
+          <p>Bangladesh</p>
+        </div>
+      </div>
+    </div>
+    ''';
 
     try {
-      // Send the POST request
-      final response = await http.post(
-        Uri.parse(_url),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-          'Authorization': 'Bearer $_apiKey',
-        },
-        body: jsonEncode(body),
-      );
-
-      // Check the status code of the response
-      if (response.statusCode == 200 || response.statusCode == 202) {
-        // Success
-        print("Email sent successfully!");
-      } else {
-        // Error handling
-        print("Failed to send email: ${response.body}");
+      // Send the email
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent. \n${e.toString()}');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
       }
-    } catch (e) {
-      // Catch any errors
-      print("Error sending email: $e");
     }
   }
 }
